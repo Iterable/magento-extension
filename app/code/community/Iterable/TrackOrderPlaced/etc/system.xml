@@ -1,0 +1,224 @@
+<config>
+    <tabs> <!-- heading in the left-side navigation -->
+        <iterableconfig translate="label" module="trackorderplaced">
+            <label><![CDATA[<div>Iterable</div>]]></label>
+            <class>iterable-section</class>
+            <sort_order>101</sort_order> <!-- General is 100, from app/code/core/Mage/Core/etc/system.xml -->
+        </iterableconfig>
+    </tabs>
+    <sections> <!-- each section defined here is a subcategory of a heading from tabs. EACH SECTION NEEDS AN ACL DEFINED IN CONFIG.XML -->
+        <api_options translate="label" module="trackorderplaced">
+            <label>API</label>
+            <tab>iterableconfig</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <api_key_options translate="label">
+                    <label>API Key</label>
+                    <frontend_type>text</frontend_type>
+                    <expanded>1</expanded>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <api_key>
+                            <label>API Key</label>
+                            <comment>Your unique API key. Can be found in your Iterable account <![CDATA[<a href="https://app.iterable.com/api/settings">here</a>]]>.</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </api_key>
+                    </fields>
+                </api_key_options>
+            </groups>
+        </api_options>
+        <transactional_email_options>
+            <label>Transactional Emails</label>
+            <tab>iterableconfig</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1001</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <account_created translate="label">
+                    <label>Account Created</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <is_enabled>
+                            <label>Enabled</label>
+                            <comment>Send account creation emails through Iterable</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_enabled>
+                        <campaign_id>
+                            <label>Triggered Campaign Id</label>
+                            <comment>Id of the Triggered Email Campaign to send when a user creates an account</comment>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </campaign_id>
+                    </fields>
+                </account_created>
+                <forgot_password translate="label">
+                    <label>Forgot Password</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <is_enabled>
+                            <label>Enabled</label>
+                            <comment>Send password reset emails through Iterable</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_enabled>
+                        <campaign_id>
+                            <label>Triggered Campaign Id</label>
+                            <comment>Id of the Triggered Email Campaign to send when a user resets their password</comment>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </campaign_id>
+                    </fields>
+                </forgot_password>
+                <newsletter_subscribe translate="label">
+                    <label>Newsletter Subscribes</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>3</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <is_enabled>
+                            <label>Enabled</label>
+                            <comment>Send newsletter subscription emails through Iterable</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_enabled>
+                        <campaign_id>
+                            <label>Triggered Campaign Id</label>
+                            <comment>Id of the Triggered Email Campaign to send when a user subscribes to a newsletter</comment>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </campaign_id>
+                    </fields>
+                </newsletter_subscribe>
+                <newsletter_unsubscribe translate="label">
+                    <label>Newsletter Unsubscribes</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>4</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <is_enabled>
+                            <label>Enabled</label>
+                            <comment>Send newsletter unsubscription emails through Iterable</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_enabled>
+                        <campaign_id>
+                            <label>Triggered Campaign Id</label>
+                            <comment>Id of the Triggered Email Campaign to send when a user unsubscribes from a newsletter</comment>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </campaign_id>
+                    </fields>
+                </newsletter_unsubscribe>
+                <order_confirm translate="label">
+                    <label>Order Confirmations</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>5</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <is_disabled>
+                            <label>Disabled</label>
+                            <comment>Suppress default order confirmation emails from Magento. Make sure you set up an appropriate workflow in Iterable first!</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_disabled>
+                    </fields>
+                </order_confirm>
+            </groups>
+        </transactional_email_options>
+        <advanced_options>
+            <label>Advanced</label>
+            <tab>iterableconfig</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1002</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <tracking_options translate="label">
+                    <label>Event Tracking</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enabled_events>
+                            <label>Events</label>
+                            <comment>The types of events to push to Iterable</comment>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>iterable_trackorderplaced/trackingeventtypes</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enabled_events>
+                    </fields>
+                </tracking_options>
+            </groups>
+        </advanced_options>
+    </sections>
+</config>

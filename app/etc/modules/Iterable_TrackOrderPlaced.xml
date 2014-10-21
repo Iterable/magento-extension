@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Module initial config
+ *
+ * @author Iterable
+ */
+-->
+<config>
+    <modules>
+        <Iterable_TrackOrderPlaced>
+
+            <!-- Whether our module is active: true or false -->
+            <active>true</active>
+
+            <!-- Which code pool to use: core, community or local -->
+            <codePool>community</codePool>
+	    
+	    <!-- Which modules our code depends on -->
+	    <depends>
+	        <!-- <Iterable_Tracker/> -->
+	    </depends>
+
+        </Iterable_TrackOrderPlaced>
+    </modules>
+</config>

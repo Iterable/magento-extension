@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Module configuration
+ *
+ * @author Iterable
+ */
+-->
+<!-- The root node for Magento module configuration -->
+<config>
+
+    <!-- 
+        The module's node contains basic 
+        information about each Magento module
+    -->
+    <modules>
+        <!--
+            This must exactly match the namespace and module's folder
+            names, with directory separators replaced by underscores
+        -->
+        <Iterable_TrackOrderPlaced>
+            <!-- The version of our module, starting at 0.0.1 -->
+            <version>0.0.1</version>
+        </Iterable_TrackOrderPlaced>
+    </modules>
+
+    <!-- Configure our module's behavior in the global scope -->
+    <global>
+
+        <helpers>
+            <trackorderplaced>
+                <class>Iterable_TrackOrderPlaced_Helper</class>
+            </trackorderplaced>
+        </helpers>
+
+        <models>
+            <iterable_trackorderplaced>
+                <class>Iterable_TrackOrderPlaced_Model</class>
+            </iterable_trackorderplaced>
+
+            <!-- disabled for now for Memebox; clashes with CustomSMTP
+            <core>
+                <rewrite>
+                    <email_template>Iterable_TrackOrderPlaced_Model_Email_Template</email_template>
+                </rewrite>
+            </core>
+            -->
+        </models>
+
+        <!-- Defining an event observer -->
+        <events>
+            <!-- The code of the event we want to observe -->
+            <sales_order_place_after>
+                <!-- Defining an observer for this event -->
+                <observers>
+                    <!--
+                        Unique identifier within the 
+                        catalog_product_save_after node.
+                        By convention, we write the module's 
+                        name in lowercase.
+                    -->
+                    <iterable_trackorderplaced>
+                        <!-- The model to be instantiated -->
+                        <class>iterable_trackorderplaced/observer</class>
+                        <!-- The method of the class to be called -->
+                        <method>orderPlaced</method>
+                        <!-- The type of class to instantiate -->
+                        <type>singleton</type>
+                    </iterable_trackorderplaced>
+                </observers>
+            </sales_order_place_after>
+            <customer_save_after>
+                <observers>
+                    <iterable_trackaccountcreated>
+                        <class>iterable_trackorderplaced/observer</class>
+                        <method>customerSaveAfter</method>
+                        <type>singleton</type>
+                    </iterable_trackaccountcreated>
+                </observers>
+            </customer_save_after>
+            <!--
+            <customer_address_save_after>
+                <observers>
+                <iterable_trackaccountcreated>
+                            <class>iterable_trackorderplaced/observer</class>
+                            <method>customerSaveAfter</method>
+                            <type>singleton</type>
+                        </iterable_trackaccountcreated>
+            </observers>
+            </customer_address_save_after>
+            -->
+            <!-- tracks additions to the cart, but doesn't track changed quantities -->
+            <!--
+            <checkout_cart_add_product_complete>
+                <observers>
+                <iterable_trackaddtocart>
+                    <class>iterable_trackorderplaced/observer</class>
+                <method>addToCart</method>
+                <type>singleton</type>
+                </iterable_trackaddtocart>
+            </observers>
+            </checkout_cart_add_product_complete>
+    checkout_cart_update_item_complete
+            -->
+            <checkout_cart_product_add_after>
+                <observers>
+                    <iterable_trackaddtocart>
+                        <class>iterable_trackorderplaced/observer</class>
+                        <method>checkoutCartProductAddAfter</method>
+                        <type>singleton</type>
+                    </iterable_trackaddtocart>
+                </observers>
+            </checkout_cart_product_add_after>
+            <checkout_cart_product_update_after>
+                <observers>
+                    <iterable_trackupdatecart>
+                        <class>iterable_trackorderplaced/observer</class>
+                        <method>checkoutCartProductUpdateAfter</method>
+                        <type>singleton</type>
+                    </iterable_trackupdatecart>
+                </observers>
+            </checkout_cart_product_update_after>
+            <checkout_cart_update_items_after>
+                <observers>
+                    <iterable_trackupdatecart>
+                        <class>iterable_trackorderplaced/observer</class>
+                        <method>checkoutCartUpdateItemsAfter</method>
+                        <type>singleton</type>
+                    </iterable_trackupdatecart>
+                </observers>
+            </checkout_cart_update_items_after>
+            <!-- should use cart events instead of quote events, quote events don't get fired when quantity changes... however we still need the remove
+            <sales_quote_add_item>
+                <observers>
+                <iterable_trackupdatecart>
+                    <class>iterable_trackorderplaced/observer</class>
+                <method>salesQuoteAddItem</method>
+                <type>singleton</type>
+                </iterable_trackupdatecart>
+            </observers>
+            </sales_quote_add_item>
+            -->
+            <sales_quote_save_before>
+                <observers>
+                    <iterable_trackclearcart>
+                        <class>iterable_trackorderplaced/observer</class>
+                        <method>salesQuoteSaveBefore</method>
+                        <type>singleton</type>
+                    </iterable_trackclearcart>
+                </observers>
+            </sales_quote_save_before>
+            <sales_quote_remove_item>
+                <observers>
+                    <iterable_trackupdatecart>
+                        <class>iterable_trackorderplaced/observer</class>
+                        <method>salesQuoteRemoveItem</method>
+                        <type>singleton</type>
+                    </iterable_trackupdatecart>
+                </observers>
+            </sales_quote_remove_item>
+            <newsletter_subscriber_save_after>
+                <observers>
+                    <iterable_tracknewslettersubscribe>
+                        <class>iterable_trackorderplaced/observer</class>
+                        <method>newsletterSubscriberSaveAfter</method>
+                        <type>singleton</type>
+                    </iterable_tracknewslettersubscribe>
+                </observers>
+            </newsletter_subscriber_save_after>
+            <sales_order_shipment_save_after>
+                <observers>
+                    <iterable_trackshipmentsaved>
+                        <class>iterable_trackorderplaced/observer</class>
+                        <method>shipmentSaveAfter</method>
+                        <type>singleton</type>
+                    </iterable_trackshipmentsaved>
+                </observers>
+            </sales_order_shipment_save_after>
+            <wishlist_add_product>
+                <observers>
+                    <iterable_wishlistadd>
+                        <type>singleton</type>
+                        <class>iterable_trackorderplaced/observer</class>
+                        <method>wishlistAddProduct</method>
+                    </iterable_wishlistadd>
+                </observers>
+            </wishlist_add_product>
+            <review_save_after>
+                <observers>
+                    <iterable_reviewsaveafter>
+                        <type>singleton</type>
+                        <class>iterable_trackorderplaced/observer</class>
+                        <method>reviewSaveAfter</method>
+                    </iterable_reviewsaveafter>
+                </observers>
+            </review_save_after>
+            <controller_action_layout_generate_blocks_after>
+                <observers>
+                    <iterable_product_view>
+                        <type>singleton</type>
+                        <class>iterable_trackorderplaced/observer</class>
+                        <method>productView</method>
+                    </iterable_product_view>
+                </observers>
+            </controller_action_layout_generate_blocks_after>
+        </events>
+    </global>
+
+    <default>
+        <api_options>
+            <api_key_options>
+                <api_key>MAGENTO_API_KEY</api_key>
+            </api_key_options>
+        </api_options>
+        <advanced_options>
+            <tracking_options>
+                <enabled_events>order,user,cartUpdated,newsletterSubscribe,newsletterUnsubscribe,triggerEmail,shipment,review,wishlistAddProduct</enabled_events>
+            </tracking_options>
+        </advanced_options>
+    </default>
+
+    <adminhtml>
+        <layout>
+            <updates>
+                <iterable_trackorderplaced>
+                    <file>iterable/common.xml</file>
+                </iterable_trackorderplaced>
+            </updates>
+        </layout>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <api_options>
+                                            <title>Iterable API Module</title>
+                                        </api_options>
+                                        <transactional_email_options>
+                                            <title>Iterable Transactional Email Module</title>
+                                        </transactional_email_options>
+                                        <advanced_options>
+                                            <title>Iterable Advanced Module</title>
+                                        </advanced_options>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+
+</config>

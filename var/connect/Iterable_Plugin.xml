@@ -1,0 +1,95 @@
+<_>
+   <form_key>o70Kt2qWmA1SEGPZ</form_key>
+   <name>Iterable_Plugin</name>
+   <channel>community</channel>
+   <version_ids>
+      <version_ids>2</version_ids>
+   </version_ids>
+   <summary>Automatically tie together your commerce platform and email marketing with this plugin from Iterable!</summary>
+   <description>After installing this plugin, you will be able to immediately view and take action in the Iterable platform whenever your Magento users make important decisions, such as signing up or making a purchase! Easily integrate and set up abandoned cart emails, handle newsletter subscriptions, or reach out to customers whenever they make a purchase. </description>
+   <license>Open Software License (OSL) </license>
+   <license_uri>http://opensource.org/licenses/OSL-3.0</license_uri>
+   <version>1.1.0</version>
+   <stability>stable</stability>
+   <notes>Added feature to choose which events get pushed to Iterable.</notes>
+   <authors>
+      <name>
+         <name>Ilya Brin</name>
+      </name>
+      <user>
+         <user>Iterable</user>
+      </user>
+      <email>
+         <email>ilya@iterable.com</email>
+      </email>
+   </authors>
+   <depends_php_min>5.4.1</depends_php_min>
+   <depends_php_max>6.0.0</depends_php_max>
+   <depends>
+      <package>
+         <name>
+            <name/>
+         </name>
+         <channel>
+            <channel/>
+         </channel>
+         <min>
+            <min/>
+         </min>
+         <max>
+            <max/>
+         </max>
+         <files>
+            <files>       </files>
+         </files>
+      </package>
+      <extension>
+         <name>
+            <name>Core</name>
+         </name>
+         <min>
+            <min/>
+         </min>
+         <max>
+            <max/>
+         </max>
+      </extension>
+   </depends>
+   <contents>
+      <target>
+         <target>magelocal</target>
+         <target>magecommunity</target>
+         <target>magedesign</target>
+         <target>mageetc</target>
+         <target>mageskin</target>
+      </target>
+      <path>
+         <path/>
+         <path>Iterable</path>
+         <path>adminhtml/default/default/layout/iterable/common.xml</path>
+         <path>modules/Iterable_TrackOrderPlaced.xml</path>
+         <path>adminhtml/base/default/iterable</path>
+      </path>
+      <type>
+         <type>file</type>
+         <type>dir</type>
+         <type>file</type>
+         <type>file</type>
+         <type>dir</type>
+      </type>
+      <include>
+         <include/>
+         <include/>
+         <include/>
+         <include/>
+         <include/>
+      </include>
+      <ignore>
+         <ignore/>
+         <ignore/>
+         <ignore/>
+         <ignore/>
+         <ignore/>
+      </ignore>
+   </contents>
+</_>
