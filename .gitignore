@@ -1,0 +1,48 @@
+*.class
+*.log
+
+deploy.conf
+deploy-user-*.conf
+# sbt specific
+/dist
+assets/dist
+assets/snippets/gen
+gen-javascripts
+gen-stylesheets
+gen
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Scala-IDE specific
+.scala_dependencies
+
+.idea/
+
+logs
+project/project
+project/target
+target
+tmp
+.history
+.DS_Store
+.idea*
+
+#test artifacts
+test/artifacts/*.png
+test/gen/*
+
+# iterable specific
+## symliked
+run.sh
+RUNNING_PID
+working_branches
+newrelic/logs/newrelic_agent.log
+
+# tests
+test/screenshots/
+
+# compiled python files
+*.pyc
