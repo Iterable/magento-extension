@@ -1,6 +1,6 @@
 <?php
 
-class Iterable_TrackOrderPlaced_Model_TrackingEventTypes
+class Iterable_TrackOrderPlaced_Model_Trackingeventtypes
 {
 
     const EVENT_TYPE_ORDER = 'order';

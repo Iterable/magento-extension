@@ -427,7 +427,7 @@ class Iterable_TrackOrderPlaced_Model_Observer
             'item' => $cartItem
         );
         $helper = Mage::helper('trackorderplaced');
-        $helper->track(Iterable_TrackOrderPlaced_Model_TrackingEventTypes::EVENT_TYPE_ADD_TO_CART, $email, $dataFields);
+        $helper->track(Iterable_TrackOrderPlaced_Model_Trackingeventtypes::EVENT_TYPE_ADD_TO_CART, $email, $dataFields);
     }
     */
 
