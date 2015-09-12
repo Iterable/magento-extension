@@ -64,12 +64,12 @@ class Iterable_TrackOrderPlaced_Model_Observer
             $product = Mage::getModel('catalog/product')->load($item->getProductId());
         }
         $typeId = $product->getTypeId();
-        
+
         if ($isOrder) {
             $price = $item->getPrice();
             $quantity = $item->getQtyOrdered();
         } elseif ($isQuote) {
-            $price = $item->getCalculationPrice(); 
+            $price = $item->getCalculationPrice();
             $quantity = $item->getQty();
         } else {
             $price = ($typeId == Mage_Catalog_Model_Product_Type::TYPE_BUNDLE) ?
@@ -78,7 +78,7 @@ class Iterable_TrackOrderPlaced_Model_Observer
                 $product->getPrice();
             $quantity = intval($product->getCartQty());
         }
-        
+
         $imageUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'catalog/product/'.$product->getImage();
         $thumbnailUrl = Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getThumbnail());
         $categoryNames = array();
@@ -103,7 +103,7 @@ class Iterable_TrackOrderPlaced_Model_Observer
     }
 
     public function getItemsFromQuote($quote=NULL, $includeConfigurableSubproducts=TRUE)
-    { 
+    {
         if ($quote == NULL) {
             $quote = Mage::getSingleton('checkout/session')->getQuote();
         }
@@ -139,7 +139,7 @@ class Iterable_TrackOrderPlaced_Model_Observer
         }
         $customer = Mage::getSingleton('customer/session')->getCustomer();
         $helper = Mage::helper('trackorderplaced');
-        $helper->updateCart($customer->getEmail(), $items); 
+        $helper->updateCart($customer->getEmail(), $items);
     }
 
     /**
@@ -151,7 +151,7 @@ class Iterable_TrackOrderPlaced_Model_Observer
         $quote = $observer->getEvent()->getQuoteItem()->getQuote();
         $quote->collectTotals();
         $quote->save();
-        
+
         $this->sendCartUpdated();
     }
 
@@ -175,7 +175,7 @@ class Iterable_TrackOrderPlaced_Model_Observer
         $this->sendCartUpdated();
     }
 
-    /** 
+    /**
      * Called when something is removed from the cart (for example via the trash can symbol on cart page)
      * Unforunately it also gets called on updateItems with quantity = 0, or when you reconfigure a configurable product with different options (so we'll get a few extra events)
      */
@@ -183,7 +183,7 @@ class Iterable_TrackOrderPlaced_Model_Observer
     {
         $this->sendCartUpdated();
     }
-    
+
     /**
      * Gets fired before the quote is saved. Seems to happen on changes to cart, in addition to whenever we view it
      * There doesn't seem to be any event called when the user clicks "Clear Shopping Cart", so hook into this and check what they clicked
@@ -335,10 +335,10 @@ class Iterable_TrackOrderPlaced_Model_Observer
      * Gets called when a customer saves their data
      * Also seems to get called at several other times (after an order, etc)
      */
-    public function customerSaveAfter(Varien_Event_Observer $observer) 
+    public function customerSaveAfter(Varien_Event_Observer $observer)
     {
         $customer = $observer->getCustomer();
-        
+
         $email = $customer->getEmail();
 
         $dataFields = $customer->getData();
@@ -353,7 +353,7 @@ class Iterable_TrackOrderPlaced_Model_Observer
         $defaultBilling = $customer->getDefaultBillingAddress();
         if ($defaultBilling) { $dataFields['defaultBilling'] = $defaultBilling->getData(); }
         // unset password/conf... unset created_at because that never changes, and it's in a bad format to boot
-        $fieldsToUnset = array('password', 'password_hash', 'confirmation', 'subscriber_confirm_code', 'created_at'); 
+        $fieldsToUnset = array('password', 'password_hash', 'confirmation', 'subscriber_confirm_code', 'created_at');
         foreach ($fieldsToUnset as $fieldToUnset) {
             if (array_key_exists($fieldToUnset, $dataFields)) {
                 unset($dataFields[$fieldToUnset]);
@@ -372,7 +372,7 @@ class Iterable_TrackOrderPlaced_Model_Observer
         if (!$customer->getOrigData()) {
             $listId = $helper->getAccountEmailListId();
             if ($listId != NULL) {
-                $helper->subscribeEmailToList($email, $listId, $dataFields); 
+                $helper->subscribeEmailToList($email, $listId, $dataFields);
             }
         }
     }
@@ -431,7 +431,7 @@ class Iterable_TrackOrderPlaced_Model_Observer
     }
     */
 
-    /** 
+    /**
      * Called whenever a newsletter subscriber is saved
      */
     public function newsletterSubscriberSaveAfter(Varien_Event_Observer $observer)
