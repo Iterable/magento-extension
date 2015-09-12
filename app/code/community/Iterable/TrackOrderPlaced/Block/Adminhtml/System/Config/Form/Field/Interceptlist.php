@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Create map used in admin config
+ * Template_name => campaign_id
+ *
+ * Class Iterable_TrackOrderPlaced_Block_Adminhtml_System_Config_Form_Field_Interceptlist
+ * @author Lucas van Staden (sales@proxiblue.com.au)
+ */
 
 class Iterable_TrackOrderPlaced_Block_Adminhtml_System_Config_Form_Field_Interceptlist
     extends Mage_Adminhtml_Block_System_Config_Form_Field_Array_Abstract

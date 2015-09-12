@@ -4,6 +4,7 @@
  * This class overwrites Magento's default send functionality by routing all
  * emails through Iterable using the Send API call.
  *
+ * @author Lucas van Staden (sales@proxiblue.com.au)
  */
 class Iterable_TrackOrderPlaced_Model_Email_Template extends Aschroder_SMTPPro_Model_Email_Template
 {
@@ -49,7 +50,7 @@ class Iterable_TrackOrderPlaced_Model_Email_Template extends Aschroder_SMTPPro_M
                                 . $iterableCampaignId
                                 . "; sending default Magento email"
                             );
-                            parent::send($email, null, $variables);
+                            parent::send($email, $name, $variables);
                         }
                     } catch (Exception $e) {
                         Mage::logException($e);
@@ -63,7 +64,7 @@ class Iterable_TrackOrderPlaced_Model_Email_Template extends Aschroder_SMTPPro_M
             }
         }
         // default, send normal
-        parent::send($email, null, $variables);
+        parent::send($email, $name, $variables);
     }
 
 }
