@@ -6,7 +6,7 @@
  *
  * @author Lucas van Staden (sales@proxiblue.com.au)
  */
-class Iterable_TrackOrderPlaced_Model_Email_Template extends Aschroder_SMTPPro_Model_Email_Template
+class Iterable_TrackOrderPlaced_Model_Email_Template extends Mage_Core_Model_Email_Template 
 {
 
     /**
