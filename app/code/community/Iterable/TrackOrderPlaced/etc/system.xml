@@ -48,26 +48,46 @@
             <show_in_website>1</show_in_website>
             <show_in_store>1</show_in_store>
             <groups>
-                <intercept translate="label">
-                    <label>Event Tracking</label>
+                <campaigns translate="label">
+                    <label>Campaigns</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>2</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
-                        <list translate="label">
+                        <intercept translate="label">
                             <label>Transaction Emails to intercept into campaigns</label>
-                            <frontend_model>trackorderplaced/adminhtml_system_config_form_field_interceptlist</frontend_model>
+                            <frontend_model>trackorderplaced/adminhtml_system_config_form_field_campaigns</frontend_model>
                             <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
                             <sort_order>100</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <comment><![CDATA[Intercept these emails and initiate a campaign]]></comment>
-                        </list>
+                        </intercept>
                     </fields>
-                </intercept>
+                </campaigns>
+                <events translate="label">
+                    <label>Events</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <intercept translate="label">
+                            <label>Transaction Emails to intercept into events</label>
+                            <frontend_model>trackorderplaced/adminhtml_system_config_form_field_events</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[Intercept these emails and push tracking data]]></comment>
+                        </intercept>
+                    </fields>
+                </events>
             </groups>
         </transactional_email_options>
         <advanced_options>

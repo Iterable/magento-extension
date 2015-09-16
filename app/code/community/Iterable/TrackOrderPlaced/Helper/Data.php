@@ -17,7 +17,7 @@ class Iterable_TrackOrderPlaced_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $apiKeyJson = $this->getDecodedMagentoApiToken();
         if ($apiKeyJson == null) {
-            mage::throwException('API Key is not set');
+            return null;
         }
 
         return $apiKeyJson->t;
@@ -43,15 +43,17 @@ class Iterable_TrackOrderPlaced_Helper_Data extends Mage_Core_Helper_Abstract
         return $apiKeyJson->u;
     }
 
-    private function callIterableApi($event, $endpoint, $params)
+    private function callIterableApi($event, $endpoint, $params, $skipTrackCheck = false)
     {
-        $eventsToTrack = Mage::getStoreConfig(self::XML_PATH_ENABLED_EVENTS);
-        $eventsToTrack = explode(",", $eventsToTrack);
-        if (!in_array($event, $eventsToTrack)) {
-            Mage::log("Iterable: tracking disabled for event " . $event);
+        if ($skipTrackCheck == false) {
+            $eventsToTrack = Mage::getStoreConfig(self::XML_PATH_ENABLED_EVENTS);
+            $eventsToTrack = explode(",", $eventsToTrack);
+            if (!in_array($event, $eventsToTrack)) {
+                Mage::log("Iterable: tracking disabled for event " . $event);
 
-            // TODO - maybe run this before gathering data about the cart
-            return null;
+                // TODO - maybe run this before gathering data about the cart
+                return null;
+            }
         }
         $apiKey = $this->getIterableApiToken();
         if ($apiKey == null) {
@@ -154,18 +156,25 @@ class Iterable_TrackOrderPlaced_Helper_Data extends Mage_Core_Helper_Abstract
         );
     }
 
-    public function track($event, $email, $dataFields = array())
-    {
+    public function track(
+        $event, $email, $dataFields = array(), $campaignId = null, $templateId = null, $skipTrackCheck = false
+    ) {
         $endpoint = '/api/events/track';
         $params = array(
             'email'     => $email,
             'eventName' => $event
         );
+        if (!is_null($campaignId)) {
+            $params['campaignId'] = $campaignId;
+        }
+        if (!is_null($templateId)) {
+            $params['templateId'] = $templateId;
+        }
         if (!empty($dataFields)) {
             $params['dataFields'] = $dataFields;
         }
 
-        return $this->callIterableApi($event, $endpoint, $params);
+        return $this->callIterableApi($event, $endpoint, $params, $skipTrackCheck);
     }
 
     public function updateCart($email, $items, $dataFields = array())
