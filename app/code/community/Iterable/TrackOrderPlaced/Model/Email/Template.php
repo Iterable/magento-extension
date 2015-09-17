@@ -31,7 +31,7 @@ class Iterable_TrackOrderPlaced_Model_Email_Template extends Mage_Core_Model_Ema
         $cleanMap = array();
         if (is_array($intercept) && count($intercept) > 0) {
             foreach ($intercept as $map) {
-                $cleanMap = array($map['template'] => $map['event_name']);
+                $cleanMap[$map['template']] = $map['event_name'];
             }
         }
         if (array_key_exists($templateCode, $cleanMap)) {
@@ -44,7 +44,7 @@ class Iterable_TrackOrderPlaced_Model_Email_Template extends Mage_Core_Model_Ema
             $cleanMap = array();
             if (is_array($intercept) && count($intercept) > 0) {
                 foreach ($intercept as $map) {
-                    $cleanMap = array($map['template'] => $map['campaign_id']);
+                    $cleanMap[$map['template']] = $map['campaign_id'];
                 }
             }
             if (array_key_exists($templateCode, $cleanMap)) {
@@ -84,10 +84,15 @@ class Iterable_TrackOrderPlaced_Model_Email_Template extends Mage_Core_Model_Ema
             $variables['name'] = $name;
             unset($variables['store']);
             $data = array();
-            if (array_key_exists('data', $variables)) {
-                if ($variables['data'] instanceof Varien_Object) {
-                    $data = $variables['data']->getData();
+            foreach($variables as $key => $value){
+                if(is_object($value) || $value instanceof Varien_Object) {
+                    $data = array_merge($data,$value->getData());
+                    unset($variables[$key]);
                 }
+            }
+            $extraData = mage::registry('additional_iterable_vars');
+            if(is_array($extraData)) {
+                $data = array_merge($data, $extraData);
             }
             $dataFields = array_merge($variables, $data);
             unset($dataFields['data']);
