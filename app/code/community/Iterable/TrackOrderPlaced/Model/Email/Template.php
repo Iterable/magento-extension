@@ -85,8 +85,11 @@ class Iterable_TrackOrderPlaced_Model_Email_Template extends Mage_Core_Model_Ema
             unset($variables['store']);
             $data = array();
             foreach($variables as $key => $value){
-                if(is_object($value) || $value instanceof Varien_Object) {
-                    $data = array_merge($data,$value->getData());
+                if($value instanceof Varien_Object) {
+                    $data = array_merge($data, $value->getData());
+                    unset($variables[$key]);
+                } elseif(is_array($value)) {
+                    $data = array_merge($data, $value);
                     unset($variables[$key]);
                 }
             }

@@ -1,4 +1,4 @@
-CODE_BASE_DIR=~/code/Iterable/magento
+CODE_BASE_DIR=~/code/magento
 MAGENTO_INSTALL_DIR=~/Sites/magento
 mkdir -p ${MAGENTO_INSTALL_DIR}/app/code/community/
 mkdir -p ${MAGENTO_INSTALL_DIR}/skin/adminhtml/base/default/
