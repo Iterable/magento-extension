@@ -33,18 +33,25 @@
             </trackorderplaced>
         </helpers>
 
+        <blocks>
+            <trackorderplaced>
+                <class>Iterable_TrackOrderPlaced_Block</class>
+            </trackorderplaced>
+        </blocks>
+
         <models>
             <iterable_trackorderplaced>
                 <class>Iterable_TrackOrderPlaced_Model</class>
             </iterable_trackorderplaced>
 
-            <!-- disabled for now for Memebox; clashes with CustomSMTP
+            <!-- extends Aschroder_SMTPPro_Model_Email_Template -->
+            <!-- if removed, Aschroder_SMTPPro_Model_Email_Template must again rewrite this class -->
             <core>
                 <rewrite>
                     <email_template>Iterable_TrackOrderPlaced_Model_Email_Template</email_template>
                 </rewrite>
             </core>
-            -->
+
         </models>
 
         <!-- Defining an event observer -->

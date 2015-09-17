@@ -1,74 +1,166 @@
 <?php
+
 /**
  * This class overwrites Magento's default send functionality by routing all
  * emails through Iterable using the Send API call.
- * 
- * @author    Iterable
+ *
  */
-class Iterable_TrackOrderPlaced_Model_Email_Template extends Mage_Core_Model_Email_Template {
+class Iterable_TrackOrderPlaced_Model_Email_Template extends Mage_Core_Model_Email_Template
+{
 
-    private function getIterableCampaignIdForTemplateName($templateName) {
-        $transactionalEmailConfig = Mage::helper('trackorderplaced')->getTransactionalEmailConfig();
-        if (array_key_exists($templateName, $transactionalEmailConfig)) {
-            // if there's something for this template, check whether it's enabled and return the id if so
-            list($enabled_cfg, $iterable_campaign_id_cfg) = $transactionalEmailConfig[$templateName];
-            return Mage::getStoreConfig($enabled_cfg) ? intval(Mage::getStoreConfig($iterable_campaign_id_cfg)): null;
-        } else {
-            // if there's nothing for this template don't send through Iterable
-            return null;
-        }
-    }
-
-    private function isDefaultSendingDisabledForTemplateName($templateName) {
-        $disabledTemplateConfig = Mage::helper('trackorderplaced')->getDefaultEmailDisabledConfig();
-        return
-            array_key_exists($templateName, $disabledTemplateConfig) &&
-            intval(Mage::getStoreConfig($disabledTemplateConfig[$templateName]));
-    }
+    protected $_helper;
 
     /**
      * Send mail to recipient
      *
-     * @param   array|string       $email        E-mail(s)
-     * @param   array|string|null  $name         receiver name(s)
-     * @param   array              $variables    template variables
+     * @param   array|string      $email     E-mail(s)
+     * @param   array|string|null $name      receiver name(s)
+     * @param   array             $variables template variables
+     *
      * @return  boolean
      **/
-    public function send($email, $name = null, array $variables = array()) 
+    public function send($email, $name = null, array $variables = array())
     {
-        $helper = Mage::helper('trackorderplaced');
+        $this->_helper = Mage::helper('trackorderplaced');
 
-        $template_name = $this->getId();
-        if ($this->isDefaultSendingDisabledForTemplateName($template_name)) {
-//            Mage::log("Suppressing default email for " . $template_name . " due to Iterable config");
-            return true;
+        // events take precedence.
+
+        $templateCode = ($this->getTemplateCode()) ? $this->getTemplateCode() : $this->getTemplateId();
+
+        $intercept = unserialize(Mage::getStoreConfig('transactional_email_options/events/intercept'));
+        $cleanMap = array();
+        if (is_array($intercept) && count($intercept) > 0) {
+            foreach ($intercept as $map) {
+                $cleanMap = array($map['template'] => array('campaign_id' => $map['campaign_id'],
+                                                            'template_id' => $map['template_id'],
+                                                            'event_name'  => $map['event_name']));
+            }
         }
-        $iterable_campaign_id = $this->getIterableCampaignIdForTemplateName($template_name);
-
-        if (empty($iterable_campaign_id)) {
-//            Mage::log("Not sending " . $template_name . " through Iterable");
-            return parent::send($email, $name, $variables);
-        }
-
-        // email and name can be either arrays or strings; we don't care about the name though
-        $emails = array_values((array)$email);
-
-        $anyFailures = false;
-        foreach ($emails as $email) {
-            try {
-                $response = $helper->triggerCampaign($email, $iterable_campaign_id);
-                if (is_null($response) || ($response->getStatus() != 200)) {
-                    Mage::log("Unable to trigger Iterable email for user " . $email . " and campaign " . $iterable_campaign_id . "; sending default Magento email");
-                    parent::send($email, null, $variables);
+        if (array_key_exists($templateCode, $cleanMap)) {
+            $result = $this->_sendAsEvent($email, $name, $variables, $cleanMap);
+            if (!is_null($result)) {
+                return $result;
+            }
+        } else {
+            $intercept = unserialize(Mage::getStoreConfig('transactional_email_options/campaigns/intercept'));
+            $cleanMap = array();
+            if (is_array($intercept) && count($intercept) > 0) {
+                foreach ($intercept as $map) {
+                    $cleanMap = array($map['template'] => $map['campaign_id']);
                 }
-            } catch (Exception $e) {
-                Mage::logException($e);
-                $anyFailures = true;
+            }
+            if (array_key_exists($templateCode, $cleanMap)) {
+                $result = $this->_sendAsCampaign($email, $name, $variables, $cleanMap);
+                if (!is_null($result)) {
+                    return $result;
+                }
+
             }
         }
 
-        return ! $anyFailures;
-    } 
+        // the fallback default
+
+        return parent::send($email, $name, $variables);
+
+    }
+
+
+    /**
+     * Email intercepted to event
+     *
+     * @param   array|string      $email     E-mail(s)
+     * @param   array|string|null $name      receiver name(s)
+     * @param   array             $variables template variables
+     * @param   array             $cleanMap  admin config data
+     *
+     * @return bool
+     */
+    private function _sendAsEvent($email, $name = null, array $variables = array(), $cleanMap = array())
+    {
+        try {
+            // the default event name is the template code
+            $eventName = ($this->getTemplateCode()) ? $this->getTemplateCode() : $this->getTemplateId();
+            if (array_key_exists('event_name', $cleanMap[$eventName]) && !empty($cleanMap[$eventName]['event_name'])) {
+                $eventName = $cleanMap[$eventName]['event_name'];
+            }
+            $campaignId = null;
+            if (array_key_exists('campaign_id', $cleanMap[$eventName])
+                && !empty($cleanMap[$eventName]['campaign_id'])
+            ) {
+                $campaignId = $cleanMap[$eventName]['campaign_id'];
+            }
+            $templateId = null;
+            if (array_key_exists('template_id', $cleanMap[$eventName])
+                && !empty($cleanMap[$eventName]['template_id'])
+            ) {
+                $templateId = $cleanMap[$eventName]['template_id'];
+            }
+            $variables['name'] = $name;
+            unset($variables['store']);
+            if (array_key_exists('data', $variables)) {
+                if ($variables['data'] instanceof Varien_Object) {
+                    $data = $variables['data']->getData();
+                }
+            }
+            $dataFields = array_merge($variables, $data);
+            unset($dataFields['data']);
+
+            return $this->_helper->track($eventName, $email, $dataFields, $campaignId, $templateId, true);
+
+        } catch (Exception $e) {
+            mage::logException($e);
+
+            return parent::send($email, $name, $variables);
+        }
+
+        return true;
+    }
+
+
+    /**
+     * EMail intercepted as campaign
+     *
+     * @param   array|string      $email     E-mail(s)
+     * @param   array|string|null $name      receiver name(s)
+     * @param   array             $variables template variables
+     * @param   array             $cleanMap  admin config data
+     *
+     * @return bool
+     */
+    private function _sendAsCampaign($email, $name = null, array $variables = array(), $cleanMap = array())
+    {
+        try {
+            $campaignId = (int)$cleanMap[$this->getTemplateCode()];
+
+            if (empty($campaignId)) {
+                return parent::send($email, $name, $variables);
+            }
+
+            // email and name can be either arrays or strings; we don't care about the name though
+            $emails = array_values((array)$email);
+
+            $anyFailures = false;
+            foreach ($emails as $email) {
+                try {
+                    $response = $this->_helper->triggerCampaign($email, $campaignId);
+                    if (is_null($response) || ($response->getStatus() != 200)) {
+                        Mage::log(
+                            "Unable to trigger Iterable email for user " . $email . " and campaign "
+                            . $campaignId
+                            . "; sending default Magento email"
+                        );
+                        parent::send($email, null, $variables);
+                    }
+                } catch (Exception $e) {
+                    Mage::logException($e);
+                    $anyFailures = true;
+                }
+            }
+
+            return !$anyFailures;
+        } catch (Exception $e) {
+            mage::logException($e);
+        }
+    }
 
 }
-?>
