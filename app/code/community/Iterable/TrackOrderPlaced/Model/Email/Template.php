@@ -44,7 +44,7 @@ class Iterable_TrackOrderPlaced_Model_Email_Template extends Mage_Core_Model_Ema
             $cleanMap = array();
             if (is_array($intercept) && count($intercept) > 0) {
                 foreach ($intercept as $map) {
-                    $cleanMap[$map['template']] = $map['event_name'];
+                    $cleanMap[$map['template']] = $map['campaign_id'];
                 }
             }
             if (array_key_exists($templateCode, $cleanMap)) {
