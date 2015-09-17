@@ -164,10 +164,21 @@ class Iterable_TrackOrderPlaced_Helper_Data extends Mage_Core_Helper_Abstract
             'email'     => $email,
             'eventName' => $event
         );
-        if (!is_null($campaignId)) {
+
+        $cookieModel = Mage::getModel('core/cookie');
+        if ($campaignId == null) {
+            $campaignId = $cookieModel->get('iterableEmailCampaignId');
+            $campaignId = empty($campaignId) ? null: intval($campaignId);
+        }
+        if ($campaignId != null) {
             $params['campaignId'] = $campaignId;
         }
-        if (!is_null($templateId)) {
+
+        if ($templateId == null) {
+            $templateId = $cookieModel->get('iterableTemplateId');
+            $templateId = empty($templateId) ? null : intval($templateId);
+        }
+        if ($templateId != null) {
             $params['templateId'] = $templateId;
         }
         if (!empty($dataFields)) {
@@ -213,8 +224,19 @@ class Iterable_TrackOrderPlaced_Helper_Data extends Mage_Core_Helper_Abstract
         if (!empty($customerDataFields)) {
             $params['user']['dataFields'] = $customerDataFields;
         }
+
+        $cookieModel = Mage::getModel('core/cookie');
+        if ($campaignId == null) {
+            $campaignId = $cookieModel->get('iterableEmailCampaignId');
+            $campaignId = empty($campaignId) ? null: intval($campaignId);
+        }
         if ($campaignId != null) {
             $params['campaignId'] = $campaignId;
+        }
+
+        if ($templateId == null) {
+            $templateId = $cookieModel->get('iterableTemplateId');
+            $templateId = empty($templateId) ? null : intval($templateId);
         }
         if ($templateId != null) {
             $params['templateId'] = $templateId;

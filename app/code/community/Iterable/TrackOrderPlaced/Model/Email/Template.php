@@ -31,9 +31,7 @@ class Iterable_TrackOrderPlaced_Model_Email_Template extends Mage_Core_Model_Ema
         $cleanMap = array();
         if (is_array($intercept) && count($intercept) > 0) {
             foreach ($intercept as $map) {
-                $cleanMap = array($map['template'] => array('campaign_id' => $map['campaign_id'],
-                                                            'template_id' => $map['template_id'],
-                                                            'event_name'  => $map['event_name']));
+                $cleanMap = array($map['template'] => $map['event_name']);
             }
         }
         if (array_key_exists($templateCode, $cleanMap)) {
@@ -50,7 +48,7 @@ class Iterable_TrackOrderPlaced_Model_Email_Template extends Mage_Core_Model_Ema
                 }
             }
             if (array_key_exists($templateCode, $cleanMap)) {
-                $result = $this->_sendAsCampaign($email, $name, $variables, $cleanMap);
+                $result = $this->_sendAsCampaign($email, $cleanMap[$templateCode], $name, $variables);
                 if (!is_null($result)) {
                     return $result;
                 }
@@ -80,23 +78,12 @@ class Iterable_TrackOrderPlaced_Model_Email_Template extends Mage_Core_Model_Ema
         try {
             // the default event name is the template code
             $eventName = ($this->getTemplateCode()) ? $this->getTemplateCode() : $this->getTemplateId();
-            if (array_key_exists('event_name', $cleanMap[$eventName]) && !empty($cleanMap[$eventName]['event_name'])) {
-                $eventName = $cleanMap[$eventName]['event_name'];
-            }
-            $campaignId = null;
-            if (array_key_exists('campaign_id', $cleanMap[$eventName])
-                && !empty($cleanMap[$eventName]['campaign_id'])
-            ) {
-                $campaignId = $cleanMap[$eventName]['campaign_id'];
-            }
-            $templateId = null;
-            if (array_key_exists('template_id', $cleanMap[$eventName])
-                && !empty($cleanMap[$eventName]['template_id'])
-            ) {
-                $templateId = $cleanMap[$eventName]['template_id'];
+            if ($cleanMap[$eventName] != null) {
+                $eventName = $cleanMap[$eventName];
             }
             $variables['name'] = $name;
             unset($variables['store']);
+            $data = array();
             if (array_key_exists('data', $variables)) {
                 if ($variables['data'] instanceof Varien_Object) {
                     $data = $variables['data']->getData();
@@ -105,7 +92,7 @@ class Iterable_TrackOrderPlaced_Model_Email_Template extends Mage_Core_Model_Ema
             $dataFields = array_merge($variables, $data);
             unset($dataFields['data']);
 
-            return $this->_helper->track($eventName, $email, $dataFields, $campaignId, $templateId, true);
+            return $this->_helper->track($eventName, $email, $dataFields, null, null, true);
 
         } catch (Exception $e) {
             mage::logException($e);
@@ -120,17 +107,17 @@ class Iterable_TrackOrderPlaced_Model_Email_Template extends Mage_Core_Model_Ema
     /**
      * EMail intercepted as campaign
      *
-     * @param   array|string      $email     E-mail(s)
-     * @param   array|string|null $name      receiver name(s)
-     * @param   array             $variables template variables
-     * @param   array             $cleanMap  admin config data
+     * @param   array|string      $email      E-mail(s)
+     * @param   string|int        $campaignId campaign id
+     * @param   array|string|null $name       receiver name(s)
+     * @param   array             $variables  template variables
      *
      * @return bool
      */
-    private function _sendAsCampaign($email, $name = null, array $variables = array(), $cleanMap = array())
+    private function _sendAsCampaign($email, $campaignId, $name = null, array $variables = array())
     {
         try {
-            $campaignId = (int)$cleanMap[$this->getTemplateCode()];
+            $campaignId = (int)$campaignId;
 
             if (empty($campaignId)) {
                 return parent::send($email, $name, $variables);
@@ -142,7 +129,7 @@ class Iterable_TrackOrderPlaced_Model_Email_Template extends Mage_Core_Model_Ema
             $anyFailures = false;
             foreach ($emails as $email) {
                 try {
-                    $response = $this->_helper->triggerCampaign($email, $campaignId);
+                    $response = $this->_helper->triggerCampaign($email, $campaignId, $variables);
                     if (is_null($response) || ($response->getStatus() != 200)) {
                         Mage::log(
                             "Unable to trigger Iterable email for user " . $email . " and campaign "
