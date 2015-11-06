@@ -20,7 +20,7 @@
         -->
         <Iterable_TrackOrderPlaced>
             <!-- The version of our module, starting at 0.0.1 -->
-            <version>1.7.0</version>
+            <version>1.7.1</version>
         </Iterable_TrackOrderPlaced>
     </modules>
 

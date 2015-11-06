@@ -566,7 +566,8 @@ class Iterable_TrackOrderPlaced_Model_Observer
 
         array_unshift($items, $item); // prepend the item just viewed
 
-        $items = array_slice($items, 0, 5); // make sure at most 5 items - they're big and there's a cookie size limit
+        // TODO - store ids instead of the full item
+        $items = array_slice($items, 0, 2); // make sure at most 2 items - they're big and there's a cookie size limit
 
         $epochSeconds = $date->gmtTimestamp();
         $epochSecondsDayAgo = $epochSeconds - (60 * 60 * 24);
